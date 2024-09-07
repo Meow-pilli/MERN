@@ -3,17 +3,17 @@ const mongoose = require('mongoose')
 const BudgetSchema = new mongoose.Schema({
     Budget: {
         type: Number,
-        required: true,
+
     },
 
     Travel: {
         type: Number,
-        required: true,
+
     },
 
     Meals: {
         type: Number,
-        required: true,
+        
     },
 
     Decorations: {
@@ -33,5 +33,5 @@ const BudgetSchema = new mongoose.Schema({
     },
 });
 
-const BudgetModel = mongoose.model("Total Budget", BudgetSchema)
-model.exports = BudgetModel
+const BudgetModel = mongoose.model("Total_Budget", BudgetSchema)
+module.exports = BudgetModel
