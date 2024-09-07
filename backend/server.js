@@ -3,15 +3,17 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const BudgetModel = require('./models/Total_Budget')
+const cors = require('cors')
 //const workoutRoutes = require('./routes/workouts')
 
 //express app
 const app = express()
+app.use(express.json())
+app.use(cors())
 
 //connect to mongobd
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URI)
 
-app.use(express.json())
 
 app.get('/', (req, res) => {
     res.json({mssg: 'welcome to the app'})  //placeholder text
