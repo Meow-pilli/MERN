@@ -18,7 +18,7 @@ const FestivalSchema = new mongoose.Schema({
         type: String,
     },
 
-    Country_Name: {
+    Country_Code: {
         type: String,
     },
 
