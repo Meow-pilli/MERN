@@ -3,6 +3,7 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const BudgetModel = require('./models/Total_Budget')
+const FestivalModel = require('./models/Festival_List')
 const cors = require('cors')
 //const workoutRoutes = require('./routes/workouts')
 
@@ -21,10 +22,13 @@ app.get('/', (req, res) => {
 
 
 app.get("/getBudgets", (req, res) => {
-    BudgetModel.find()
-    .then(total_budgets => res.json(Misc))
-    .catch(err => res.json(err))
+    BudgetModel.find({}).then(function(Total_Budget) {
+        res.json(Total_Budget)
+    }).catch(function(err){
+        console.log(err)
+    })
 });
+
 
 
 app.post("/postBudgets", async (req, res) => {
@@ -34,6 +38,14 @@ app.post("/postBudgets", async (req, res) => {
 
     res.json(user)
 })
+
+app.get("/getFestivals", (req, res) => {
+    FestivalModel.find({}).then(function(Festival_List) {
+        res.json(Festival_List)
+    }).catch(function(err){
+        console.log(err)
+    })
+});
 
 //routes
 //app.use('/api.workouts', workoutRoutes)
