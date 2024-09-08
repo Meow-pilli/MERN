@@ -1,0 +1,13 @@
+{
+    "_id": {
+      "$oid": "66dc1d1eca90141c55378222"
+    },
+    "Budget": 520,
+    "Travel": 20,
+    "Meals": 40,
+    "Decorations": 60,
+    "Gifts": 80,
+    "Entertainment": 20,
+    "Misc": 40,
+    "__v": 0
+  }
