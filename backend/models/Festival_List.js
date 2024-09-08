@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const FestivalSchema = new mongoose.Schema({
     Date: {
         type: String,
+        required: true,
     },
 
     Name: {
