@@ -30,7 +30,6 @@ app.get("/getBudgets", (req, res) => {
     })
 });
 
-
 app.post("/postBudgets", async (req, res) => {
     const user = req.body
     const NewUser = new BudgetModel(user)
@@ -46,17 +45,15 @@ app.get("/getFestivals", (req, res) => {
         console.log(err)
     })
 });
-
-app.get("/getUsers", (req, res) => {
-    UserModel.find({}, (err, result) => {
-      if (err) {
-        res.json(err);
-      } else {
-        res.json(result);
-      }
-    });
-  });
   
+app.get("/getUsers", (req, res) => {
+    UserModel.find({}).then(function(users) {
+        res.json(users)
+    }).catch(function(err){
+        console.log(err)
+    })
+});
+
   app.post("/createUser", async (req, res) => {
     const user = req.body;
     const newUser = new UserModel(user);
