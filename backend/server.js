@@ -4,6 +4,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const BudgetModel = require('./models/Total_Budget')
 const FestivalModel = require('./models/Festival_List')
+const UserModel = require("./models/Users")
 const cors = require('cors')
 //const workoutRoutes = require('./routes/workouts')
 
@@ -30,7 +31,6 @@ app.get("/getBudgets", (req, res) => {
 });
 
 
-
 app.post("/postBudgets", async (req, res) => {
     const user = req.body
     const NewUser = new BudgetModel(user)
@@ -47,8 +47,23 @@ app.get("/getFestivals", (req, res) => {
     })
 });
 
-//routes
-//app.use('/api.workouts', workoutRoutes)
+app.get("/getUsers", (req, res) => {
+    UserModel.find({}, (err, result) => {
+      if (err) {
+        res.json(err);
+      } else {
+        res.json(result);
+      }
+    });
+  });
+  
+  app.post("/createUser", async (req, res) => {
+    const user = req.body;
+    const newUser = new UserModel(user);
+    await newUser.save();
+  
+    res.json(user);
+});
 
 //listen for requests
 app.listen(process.env.PORT, () => {

@@ -3,35 +3,29 @@ import { useState, useEffect } from "react";
 import Axios from "axios";
 
 function App() {
-  const [listOfFestivals, setListOfFestivals] = useState([]);
-  const [Date, setDate] = useState("");
-  const [Name, setName] = useState("");
-  const [Type, setType] = useState("");
-  const [Country_Name, setCountry_Name] = useState("");
-  const [Country_Code, setCountry_Code] = useState("");
+  const [listOfUsers, setListOfUsers] = useState([]);
+  const [name, setName] = useState("");
+  const [age, setAge] = useState(0);
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
-    Axios.get("http://localhost:5555/getFestivals").then((response) => {
-      setListOfFestivals(response.data);
+    Axios.get("http://localhost:5555/getUsers").then((response) => {
+      setListOfUsers(response.data);
     });
   }, []);
 
-  const createFestival = () => {
-    Axios.post("http://localhost:5555/PostFestivals", {
-      Date,
-      Name,
-      Type,
-      Country_Name,
-      Country_Code,
+  const createUser = () => {
+    Axios.post("http://localhost:5555/createUser", {
+      name,
+      age,
+      username,
     }).then((response) => {
-      setListOfFestivals([
-        ...listOfFestivals,
+      setListOfUsers([
+        ...listOfUsers,
         {
-          Date,
-          Name,
-          Type,
-          Country_Name,
-          Country_Code,
+          name,
+          age,
+          username,
         },
       ]);
     });
@@ -39,15 +33,13 @@ function App() {
 
   return (
     <div className="App">
-      <div className="FestivalsDisplay">
-        {listOfFestivals.map((festival) => {
+      <div className="usersDisplay">
+        {listOfUsers.map((user) => {
           return (
             <div>
-              <h1>Date: {festival.date}</h1>
-              <h1>Name: {festival.name}</h1>
-              <h1>Type: {festival.type}</h1>
-              <h1>Country_Name: {festival.country_Name}</h1>
-              <h1>Country_Code: {festival.country_Code}</h1>
+              <h1>Name: {user.name}</h1>
+              <h1>Age: {user.age}</h1>
+              <h1>Username: {user.username}</h1>
             </div>
           );
         })}
@@ -56,40 +48,26 @@ function App() {
       <div>
         <input
           type="text"
-          placeholder="Date..."
-          onChange={(event) => {
-            setDate(event.target.value);
-          }}
-        />
-        <input
-          type="text"
           placeholder="Name..."
           onChange={(event) => {
             setName(event.target.value);
           }}
         />
         <input
-          type="text"
-          placeholder="Type..."
+          type="number"
+          placeholder="Age..."
           onChange={(event) => {
-            setType(event.target.value);
+            setAge(event.target.value);
           }}
         />
         <input
           type="text"
-          placeholder="Country Name..."
+          placeholder="Username..."
           onChange={(event) => {
-            setCountry_Name(event.target.value);
+            setUsername(event.target.value);
           }}
         />
-        <input
-          type="text"
-          placeholder="Country Code..."
-          onChange={(event) => {
-            setCountry_Code(event.target.value);
-          }}
-        />
-        <button onClick={createFestival}> Create Festival </button>
+        <button onClick={createUser}> Create User </button>
       </div>
     </div>
   );
