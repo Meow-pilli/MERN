@@ -54,13 +54,34 @@ app.get("/getUsers", (req, res) => {
     })
 });
 
-  app.post("/createUser", async (req, res) => {
+app.post("/createUser", async (req, res) => {
     const user = req.body;
     const newUser = new UserModel(user);
     await newUser.save();
   
     res.json(user);
 });
+
+//sumanth code
+const apiURL = "https://restcountries.com/v3.1"
+app.get("/getCountryByName", async (req, res) => {
+    const { countryName } = req.params;
+  
+    try {
+      const response = await fetch(`${apiURL}/name/${countryName}`);
+  
+      if (!response.ok) {
+        throw new Error("Not found any country!");
+      }
+  
+      const data = await response.json();
+      res.json(data); // Sending the data as JSON response
+  
+    } catch (error) {
+      res.status(500).json({ error: error.message }); // Sending error message as JSON response
+    }
+  });
+  
 
 //listen for requests
 app.listen(process.env.PORT, () => {
