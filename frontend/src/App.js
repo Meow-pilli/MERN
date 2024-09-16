@@ -31,9 +31,18 @@ function Budget() {
   const [indoorDecorations, setIndoorDecorations] = useState(0);
   const [outdoorDecorations, setOutdoorDecorations] = useState(0);
   const [lights, setLights] = useState(0);
-  
+
+  const [currency, setCurrency] = useState('USD');
   const [budget, setBudget] = useState('');
   const [message, setMessage] = useState('');
+
+  // Top 40 currencies list
+  const currencies = [
+    "USD", "EUR", "JPY", "GBP", "AUD", "CAD", "CHF", "CNY", "SEK", "NZD",
+    "MXN", "SGD", "HKD", "NOK", "KRW", "TRY", "INR", "RUB", "BRL", "ZAR",
+    "DKK", "PLN", "TWD", "THB", "MYR", "IDR", "CZK", "HUF", "ILS", "CLP",
+    "PHP", "AED", "COP", "SAR", "PEN", "VND", "PKR", "EGP", "BDT", "KWD", "QAR"
+  ];
 
   let calcBudget = (event) => {
     // prevent submitting
@@ -70,9 +79,9 @@ function Budget() {
 
     // Logic for message
     if (totalBudget < 500) {
-      setMessage('You are under Budget of 500');
+      setMessage(`You are under Budget of 500 ${currency}`);
     } else {
-      setMessage('You are over Budget of 500');
+      setMessage(`You are over Budget of 500 ${currency}`);
     }
   };
 
@@ -84,6 +93,17 @@ function Budget() {
     <div className="app">
       <div className="container">
         <h2 className="center">Budget Calculator</h2>
+
+        {/* Currency Dropdown */}
+        <div>
+          <label>Select Currency</label>
+          <select value={currency} onChange={(e) => setCurrency(e.target.value)}>
+            {currencies.map((curr) => (
+              <option key={curr} value={curr}>{curr}</option>
+            ))}
+          </select>
+        </div>
+
         <form onSubmit={calcBudget}>
           {/* Gifts Section */}
           <div>
@@ -160,20 +180,21 @@ function Budget() {
             
             <label>Outdoor Decorations</label>
             <input type="number" value={outdoorDecorations} onChange={(e) => setOutdoorDecorations(e.target.value)} />
-            
             <label>Lights</label>
             <input type="number" value={lights} onChange={(e) => setLights(e.target.value)} />
           </div>
 
-          <div>
-            <button className="btn" type="submit">Submit</button>
-            <button className="btn btn-outline" onClick={reload} type="button">Reload</button>
+          <div className="center">
+            <button type="submit" className="btn">Calculate</button>
+            <button type="button" className="btn" onClick={reload}>Reload</button>
           </div>
+
         </form>
 
-        <div className="center">
-          <h3>Your Budget is: {budget}</h3>
-          <p>{message}</p>
+        {/* Budget Display */}
+        <div>
+          <h2>Total Budget: {budget} {currency}</h2>
+          <h3>{message}</h3>
         </div>
       </div>
     </div>
