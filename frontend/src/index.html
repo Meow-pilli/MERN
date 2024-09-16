@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holiday Dropdown</title>
+    <style>
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Select a Holiday</h1>
+    <select id="holidayDropdown">
+        <option value="">Select a holiday</option>
+        <!-- Holiday options will be inserted here -->
+    </select>
+    <script>
+        async function fetchHolidays() {
+            try {
+                const response = await fetch('http://localhost:3000/holidays');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const holidays = await response.json();
+                
+                const dropdown = document.querySelector('#holidayDropdown');
+                holidays.forEach(holiday => {
+                    const option = document.createElement('option');
+                    option.value = holiday._id; // Set value to unique ID or other identifier
+                    option.textContent = `${holiday.name} (${holiday.date})`;
+                    dropdown.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching holidays:', error);
+            }
+        }
+
+        fetchHolidays();
+    </script>
+</body>
+</html>
