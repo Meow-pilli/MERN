@@ -1,172 +1,180 @@
+import React, { useState } from "react";
 import "./App.css";
-import { useState, useEffect } from "react";
 import Axios from "axios";
 
-function Users() {
-  const [listOfUsers, setListOfUsers] = useState([]);
-  const [name, setName] = useState("");
-  const [age, setAge] = useState(0);
-  const [username, setUsername] = useState("");
+function Budget() {
+  // state
+  const [numFamilyMembers, setNumFamilyMembers] = useState(0);
+  const [budgetPerFamilyMember, setBudgetPerFamilyMember] = useState(0);
+  const [numFriends, setNumFriends] = useState(0);
+  const [budgetPerFriend, setBudgetPerFriend] = useState(0);
+  
+  const [numTravelers, setNumTravelers] = useState(0);
+  const [travelCostPerPerson, setTravelCostPerPerson] = useState(0);
+  const [transportation, setTransportation] = useState(0);
+  const [accommodation, setAccommodation] = useState(0);
+  
+  const [numMeals, setNumMeals] = useState(0);
+  const [costPerMeal, setCostPerMeal] = useState(0);
+  const [food, setFood] = useState(0);
+  const [drinks, setDrinks] = useState(0);
+  const [snacks, setSnacks] = useState(0);
 
-  useEffect(() => {
-    Axios.get("http://localhost:5555/getUsers").then((response) => {
-      setListOfUsers(response.data);
-    });
-  }, []);
+  const [partiesAndEvents, setPartiesAndEvents] = useState(0);
+  const [iceSkating, setIceSkating] = useState(0);
+  const [concerts, setConcerts] = useState(0);
+  const [christmasMarkets, setChristmasMarkets] = useState(0);
 
-  const createUser = () => {
-    Axios.post("http://localhost:5555/createUser", {
-      name,
-      age,
-      username,
-    }).then((response) => {
-      setListOfUsers([
-        ...listOfUsers,
-        {
-          name,
-          age,
-          username,
-        },
-      ]);
-    });
+  const [wrappingPaper, setWrappingPaper] = useState(0);
+  const [cards, setCards] = useState(0);
+
+  const [indoorDecorations, setIndoorDecorations] = useState(0);
+  const [outdoorDecorations, setOutdoorDecorations] = useState(0);
+  const [lights, setLights] = useState(0);
+  
+  const [budget, setBudget] = useState('');
+  const [message, setMessage] = useState('');
+
+  let calcBudget = (event) => {
+    // prevent submitting
+    event.preventDefault();
+
+    // Calculating Gifts
+    let giftsTotal = (Number(numFamilyMembers) * Number(budgetPerFamilyMember)) +
+                    (Number(numFriends) * Number(budgetPerFriend));
+
+    // Calculating Travel
+    let travelTotal = (Number(numTravelers) * Number(travelCostPerPerson)) +
+                      Number(transportation) + Number(accommodation);
+
+    // Calculating Food and Drinks
+    let foodAndDrinksTotal = (Number(numMeals) * Number(costPerMeal)) +
+                             Number(food) + Number(drinks) + Number(snacks);
+
+    // Calculating Entertainment
+    let entertainmentTotal = Number(partiesAndEvents) + 
+                             Number(iceSkating) + Number(concerts) + 
+                             Number(christmasMarkets);
+
+    // Calculating Stationary
+    let stationaryTotal = Number(wrappingPaper) + Number(cards);
+
+    // Calculating Decorations
+    let decorationsTotal = Number(indoorDecorations) + 
+                           Number(outdoorDecorations) + Number(lights);
+
+    let totalBudget = giftsTotal + travelTotal + foodAndDrinksTotal + 
+                      entertainmentTotal + stationaryTotal + decorationsTotal;
+    
+    setBudget(totalBudget);
+
+    // Logic for message
+    if (totalBudget < 500) {
+      setMessage('You are under Budget of 500');
+    } else {
+      setMessage('You are over Budget of 500');
+    }
+  };
+
+  let reload = () => {
+    window.location.reload();
   };
 
   return (
-    <div className="App">
-      <div className="usersDisplay">
-        {listOfUsers.map((user) => {
-          return (
-            <div>
-              <h1>Name: {user.name}</h1>
-              <h1>Age: {user.age}</h1>
-              <h1>Username: {user.username}</h1>
-            </div>
-          );
-        })}
-      </div>
-
-      <div>
-        <input
-          type="text"
-          placeholder="Name..."
-          onChange={(event) => {
-            setName(event.target.value);
-          }}
-        />
-        <input
-          type="number"
-          placeholder="Age..."
-          onChange={(event) => {
-            setAge(event.target.value);
-          }}
-        />
-        <input
-          type="text"
-          placeholder="Username..."
-          onChange={(event) => {
-            setUsername(event.target.value);
-          }}
-        />
-        <button onClick={createUser}> Create User </button>
-      </div>
-    </div>
-  );
-}
-
-//Total Budget Calculator
-
-function Budget() {
-
-  // state
-  const [Gifts, setGifts] = useState(0)
-  const [Travel, setTravel] = useState(0)
-  const [FoodnDrinks, setFoodnDrinks] = useState(0)
-  const [Entertainment, setEntertainment] = useState(0)
-  const [Decorations, setDecorations] = useState(0)
-  const [CostumesnClothing, setCostumesnClothing] = useState(0)
-  const [StationarynPacking, setStationarynPacking] = useState(0)
-  const [CharitablenContributions, setCharitablenContributions] = useState(0)
-  const [Budget, setBudget] = useState('')
-  const [message, setMessage] = useState('')
-
-
-
-  let calcBudget = (event) => {
-    //prevent suBudgettting
-    event.preventDefault()
-
-    if (Gifts === 0 || Travel === 0) {
-      alert('Please enter a valid weight and Travel')
-    } else {
-      let Budget = (Number(Gifts) + Number(Travel) + Number(FoodnDrinks) + Number(Entertainment) + Number(Decorations)
-    + Number(CostumesnClothing)+ Number(StationarynPacking) + Number(CharitablenContributions))
-      setBudget(Budget)
-
-      // Logic for message
-
-      if (Budget < 500) {
-        setMessage('You are under Budget of 500')
-      } else {
-        setMessage('You are over Budget of 500')
-      }
-    }
-  }
-
-  //  show image based on Budget calculation
-
-
-  let reload = () => {
-    window.location.reload()
-  }
-
-  return (
     <div className="app">
-      <div className='container'>
-        <h2 className='center'>Budget Calculator</h2>
+      <div className="container">
+        <h2 className="center">Budget Calculator</h2>
         <form onSubmit={calcBudget}>
+          {/* Gifts Section */}
           <div>
-            <label>Gifts</label>
-            <input value={Gifts} onChange={(e) => setGifts(e.target.value)} />
+            <h3>Gifts</h3>
+            <label>Number of Family Members</label>
+            <input type="number" value={numFamilyMembers} onChange={(e) => setNumFamilyMembers(e.target.value)} />
+            <label>Budget per Family Member</label>
+            <input type="number" value={budgetPerFamilyMember} onChange={(e) => setBudgetPerFamilyMember(e.target.value)} />
+            
+            <label>Number of Friends</label>
+            <input type="number" value={numFriends} onChange={(e) => setNumFriends(e.target.value)} />
+            <label>Budget per Friend</label>
+            <input type="number" value={budgetPerFriend} onChange={(e) => setBudgetPerFriend(e.target.value)} />
           </div>
+
+          {/* Travel Section */}
           <div>
-            <label>Travel</label>
-            <input value={Travel} onChange={(event) => setTravel(event.target.value)} />
+            <h3>Travel</h3>
+            <label>Number of Travelers</label>
+            <input type="number" value={numTravelers} onChange={(e) => setNumTravelers(e.target.value)} />
+            <label>Travel Cost per Person</label>
+            <input type="number" value={travelCostPerPerson} onChange={(e) => setTravelCostPerPerson(e.target.value)} />
+            
+            <label>Transportation</label>
+            <input type="number" value={transportation} onChange={(e) => setTransportation(e.target.value)} />
+            <label>Accommodation</label>
+            <input type="number" value={accommodation} onChange={(e) => setAccommodation(e.target.value)} />
           </div>
+
+          {/* Food and Drinks Section */}
           <div>
-            <label>Food and Drinks</label>
-            <input value={FoodnDrinks} onChange={(e) => setFoodnDrinks(e.target.value)} />
+            <h3>Food and Drinks</h3>
+            <label>Number of Meals</label>
+            <input type="number" value={numMeals} onChange={(e) => setNumMeals(e.target.value)} />
+            <label>Cost per Meal</label>
+            <input type="number" value={costPerMeal} onChange={(e) => setCostPerMeal(e.target.value)} />
+            
+            <label>Food</label>
+            <input type="number" value={food} onChange={(e) => setFood(e.target.value)} />
+            <label>Drinks</label>
+            <input type="number" value={drinks} onChange={(e) => setDrinks(e.target.value)} />
+            <label>Snacks</label>
+            <input type="number" value={snacks} onChange={(e) => setSnacks(e.target.value)} />
           </div>
+
+          {/* Entertainment Section */}
           <div>
-            <label>Entertainment</label>
-            <input value={Entertainment} onChange={(e) => setEntertainment(e.target.value)} />
+            <h3>Entertainment</h3>
+            <label>Parties and Events</label>
+            <input type="number" value={partiesAndEvents} onChange={(e) => setPartiesAndEvents(e.target.value)} />
+            
+            <label>Ice Skating</label>
+            <input type="number" value={iceSkating} onChange={(e) => setIceSkating(e.target.value)} />
+            <label>Concerts/Pageants</label>
+            <input type="number" value={concerts} onChange={(e) => setConcerts(e.target.value)} />
+            <label>Christmas Markets</label>
+            <input type="number" value={christmasMarkets} onChange={(e) => setChristmasMarkets(e.target.value)} />
           </div>
+
+          {/* Stationary Section */}
           <div>
-            <label>Decorations</label>
-            <input value={Decorations} onChange={(e) => setDecorations(e.target.value)} />
+            <h3>Stationary</h3>
+            <label>Wrapping Paper</label>
+            <input type="number" value={wrappingPaper} onChange={(e) => setWrappingPaper(e.target.value)} />
+            <label>Cards</label>
+            <input type="number" value={cards} onChange={(e) => setCards(e.target.value)} />
           </div>
+
+          {/* Decorations Section */}
           <div>
-            <label>Costumes Clothing</label>
-            <input value={CostumesnClothing} onChange={(e) => setCostumesnClothing(e.target.value)} />
+            <h3>Decorations</h3>
+            <label>Indoor Decorations</label>
+            <input type="number" value={indoorDecorations} onChange={(e) => setIndoorDecorations(e.target.value)} />
+            
+            <label>Outdoor Decorations</label>
+            <input type="number" value={outdoorDecorations} onChange={(e) => setOutdoorDecorations(e.target.value)} />
+            
+            <label>Lights</label>
+            <input type="number" value={lights} onChange={(e) => setLights(e.target.value)} />
           </div>
+
           <div>
-            <label>Stationary and Packing</label>
-            <input value={StationarynPacking} onChange={(e) => setStationarynPacking(e.target.value)} />
-          </div>
-          <div>
-            <label>Charitable Contributions</label>
-            <input value={CharitablenContributions} onChange={(e) => setCharitablenContributions(e.target.value)} />
-          </div>
-          <div>
-            <button className='btn' type='submit'>Submit</button>
-            <button className='btn btn-outline' onClick={reload} type='submit'>Reload</button>
+            <button className="btn" type="submit">Submit</button>
+            <button className="btn btn-outline" onClick={reload} type="button">Reload</button>
           </div>
         </form>
 
-        <div className='center'>
-          <h3>Your Budget is: {Budget}</h3>
+        <div className="center">
+          <h3>Your Budget is: {budget}</h3>
           <p>{message}</p>
         </div>
-
       </div>
     </div>
   );
