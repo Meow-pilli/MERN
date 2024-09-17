@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import Axios from "axios";
 
@@ -44,44 +44,41 @@ function Budget() {
     "PHP", "AED", "COP", "SAR", "PEN", "VND", "PKR", "EGP", "BDT", "KWD", "QAR"
   ];
 
-  let calcBudget = (event) => {
-    // prevent submitting
+  const calcBudget = async (event) => {
     event.preventDefault();
 
-    // Calculating Gifts
-    let giftsTotal = (Number(numFamilyMembers) * Number(budgetPerFamilyMember)) +
-                    (Number(numFriends) * Number(budgetPerFriend));
+    try {
+      const response = await Axios.post('http://localhost:5555/calcBudget', {
+        numFamilyMembers,
+        budgetPerFamilyMember,
+        numFriends,
+        budgetPerFriend,
+        numTravelers,
+        travelCostPerPerson,
+        transportation,
+        accommodation,
+        numMeals,
+        costPerMeal,
+        food,
+        drinks,
+        snacks,
+        partiesAndEvents,
+        iceSkating,
+        concerts,
+        christmasMarkets,
+        wrappingPaper,
+        cards,
+        indoorDecorations,
+        outdoorDecorations,
+        lights,
+        currency
+      });
 
-    // Calculating Travel
-    let travelTotal = (Number(numTravelers) * Number(travelCostPerPerson)) +
-                      Number(transportation) + Number(accommodation);
-
-    // Calculating Food and Drinks
-    let foodAndDrinksTotal = (Number(numMeals) * Number(costPerMeal)) +
-                             Number(food) + Number(drinks) + Number(snacks);
-
-    // Calculating Entertainment
-    let entertainmentTotal = Number(partiesAndEvents) + 
-                             Number(iceSkating) + Number(concerts) + 
-                             Number(christmasMarkets);
-
-    // Calculating Stationary
-    let stationaryTotal = Number(wrappingPaper) + Number(cards);
-
-    // Calculating Decorations
-    let decorationsTotal = Number(indoorDecorations) + 
-                           Number(outdoorDecorations) + Number(lights);
-
-    let totalBudget = giftsTotal + travelTotal + foodAndDrinksTotal + 
-                      entertainmentTotal + stationaryTotal + decorationsTotal;
-    
-    setBudget(totalBudget);
-
-    // Logic for message
-    if (totalBudget < 500) {
-      setMessage(`You are under Budget of 500 ${currency}`);
-    } else {
-      setMessage(`You are over Budget of 500 ${currency}`);
+      setBudget(response.data.totalBudget);
+      setMessage(response.data.message);
+    } catch (error) {
+      console.error('Error calculating budget', error);
+      setMessage('Error calculating budget');
     }
   };
 
