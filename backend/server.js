@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const BudgetModel = require('./models/Total_Budget')
 const FestivalModel = require('./models/Festival_List')
 const UserModel = require("./models/Users")
+const CurrencyModel = require("./models/Currency")
 const cors = require('cors')
 //const workoutRoutes = require('./routes/workouts')
 
@@ -20,7 +21,14 @@ mongoose.connect(process.env.MONGODB_URI)
 app.get('/', (req, res) => {
     res.json({mssg: 'welcome to the app'})  //placeholder text
 })
-  
+
+app.get("/getCurrency", (req, res) => {
+  CurrencyModel.find({}).then(function(Currency) {
+      res.json(Currency)
+  }).catch(function(err){
+      console.log(err)
+  })
+});
 
 app.post('/calcBudget', (req, res) => {
     const {

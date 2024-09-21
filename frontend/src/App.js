@@ -39,34 +39,17 @@ function Budget() {
   const [message, setMessage] = useState('');             // Message based on overspending or underspending
   
   const [currency, setCurrency] = useState('USD');        // Currency state
-  const [currencies, setCurrencies] = useState([]);       // Currencies array from JSON
-  const [loading, setLoading] = useState(true);           // Loading state
-  const [error, setError] = useState(null);               // Error state
+  const [currencies, setCurrencies] = useState([]);
+  const [selectedCurrency, setSelectedCurrency] = useState("");       // Currencies array from JSON
 
-  // Fetch currencies from JSON on component mount
+  const handleCurrencyChange = (event) => {
+    setSelectedCurrency(event.target.value);}
+
+  // Fetch currencies from Database
   useEffect(() => {
-    // Fetch the currency data from the JSON file
-    fetch("/data/Common-Currency.json")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Convert the object into an array of currency objects
-        const currencyArray = Object.keys(data).map((key) => ({
-          code: key,
-          ...data[key]
-        }));
-        setCurrencies(currencyArray); // Set the array of currencies in state
-        setLoading(false); // Set loading to false after data is loaded
-      })
-      .catch((error) => {
-        console.error("Error fetching currencies:", error);
-        setError("Failed to load currencies");
-        setLoading(false); // Ensure loading is false even if there's an error
-      });
+    Axios.get("http://localhost:5555/getCurrency").then((response) => {
+      setCurrencies(response.data);
+    });
   }, []);
 
   const calcBudget = async (event) => {
@@ -119,19 +102,16 @@ function Budget() {
 
         {/* Currency Dropdown */}
         <div>
-          <label>Select Currency</label>
-          <select value={currency} onChange={(e) => setCurrency(e.target.value)}>
-            {loading ? (
-              <option>Loading...</option>
-            ) : error ? (
-              <option>{error}</option>
-            ) : (
-              currencies.map((curr) => (
-                <option key={curr.code} value={curr.code}>{curr.name} ({curr.symbol})</option>
-              ))
-            )}
-          </select>
-        </div>
+      <label htmlFor="currency-select">Select Currency:</label>
+      <select id="currency-select" value={selectedCurrency} onChange={handleCurrencyChange}>
+        <option value="">Currency</option>
+        {currencies.map((currency) => (
+          <option key={currency.code} value={currency.code}>
+            {currency.name} ({currency.symbol})
+          </option>
+        ))}
+      </select>
+    </div>
 
         {/* Holiday Budget Input */}
         <div>
