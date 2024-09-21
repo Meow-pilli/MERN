@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
 function Budget() {
@@ -42,6 +42,7 @@ function Budget() {
   const [loading, setLoading] = useState(true);           // Loading state
   const [error, setError] = useState(null);               // Error state
 
+  // Fetch currencies from JSON on component mount
   useEffect(() => {
     // Fetch the currency data from the JSON file
     fetch("/data/Common-Currency.json")
@@ -52,8 +53,6 @@ function Budget() {
         return response.json();
       })
       .then((data) => {
-        console.log("Fetched currency data:", data); // Log fetched data
-  
         // Convert the object into an array of currency objects
         const currencyArray = Object.keys(data).map((key) => ({
           code: key,
@@ -68,10 +67,8 @@ function Budget() {
         setLoading(false); // Ensure loading is false even if there's an error
       });
   }, []);
-  
 
   let calcBudget = (event) => {
-    // prevent submitting
     event.preventDefault();
 
     // Calculating Gifts
@@ -98,16 +95,22 @@ function Budget() {
     let decorationsTotal = Number(indoorDecorations) + 
                            Number(outdoorDecorations) + Number(lights);
 
+    // Calculating total actual budget
     let totalBudget = giftsTotal + travelTotal + foodAndDrinksTotal + 
                       entertainmentTotal + stationaryTotal + decorationsTotal;
-    
-    setBudget(totalBudget);
 
-    // Logic for message
-    if (totalBudget < 500) {
-      setMessage(`You are under Budget of 500 ${currency}`);
+    // Set the actual budget
+    setActualBudget(totalBudget);
+
+    // Calculate difference between holiday budget and actual budget
+    let budgetDifference = holidayBudget - totalBudget;
+    setDifference(budgetDifference);
+
+    // Determine the message
+    if (budgetDifference >= 0) {
+      setMessage(`You are within your budget! You saved ${budgetDifference} ${currency}`);
     } else {
-      setMessage(`You are over Budget of 500 ${currency}`);
+      setMessage(`You overspent by ${Math.abs(budgetDifference)} ${currency}`);
     }
   };
 
