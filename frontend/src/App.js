@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./App.css";
 
 function Budget() {
@@ -71,6 +71,7 @@ function Budget() {
   
 
   let calcBudget = (event) => {
+    // prevent submitting
     event.preventDefault();
 
     // Calculating Gifts
@@ -97,22 +98,16 @@ function Budget() {
     let decorationsTotal = Number(indoorDecorations) + 
                            Number(outdoorDecorations) + Number(lights);
 
-    // Calculating total actual budget
     let totalBudget = giftsTotal + travelTotal + foodAndDrinksTotal + 
                       entertainmentTotal + stationaryTotal + decorationsTotal;
+    
+    setBudget(totalBudget);
 
-    // Set the actual budget
-    setActualBudget(totalBudget);
-
-    // Calculate difference between holiday budget and actual budget
-    let budgetDifference = holidayBudget - totalBudget;
-    setDifference(budgetDifference);
-
-    // Determine the message
-    if (budgetDifference >= 0) {
-      setMessage(`You are within your budget! You saved ${budgetDifference} ${currency}`);
+    // Logic for message
+    if (totalBudget < 500) {
+      setMessage(`You are under Budget of 500 ${currency}`);
     } else {
-      setMessage(`You overspent by ${Math.abs(budgetDifference)} ${currency}`);
+      setMessage(`You are over Budget of 500 ${currency}`);
     }
   };
 
