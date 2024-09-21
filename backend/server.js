@@ -30,6 +30,14 @@ app.get("/getCurrency", (req, res) => {
   })
 });
 
+app.get("/getFestivals", (req, res) => {
+  FestivalModel.find({}).then(function(Festival_List) {
+      res.json(Festival_List)
+  }).catch(function(err){
+      console.log(err)
+  })
+});
+
 app.post('/calcBudget', (req, res) => {
     const {
       numFamilyMembers,

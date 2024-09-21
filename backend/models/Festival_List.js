@@ -8,6 +8,8 @@ const FestivalSchema = new mongoose.Schema({
 
     Name: {
         type: String,
+        required: true,
+        unique: true,
     },
 
     Type: {

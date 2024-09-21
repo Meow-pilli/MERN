@@ -42,6 +42,14 @@ function Budget() {
   const [currencies, setCurrencies] = useState([]);
   const [selectedCurrency, setSelectedCurrency] = useState("");       // Currencies array from JSON
 
+  const [festivals, setFestivals] = useState([]);
+
+  useEffect(() => {
+    Axios.get("http://localhost:5555/getFestivals").then((response) => {
+      setFestivals(response.data);
+    });
+  }, []);
+
   const handleCurrencyChange = (event) => {
     setSelectedCurrency(event.target.value);}
 
@@ -99,6 +107,17 @@ function Budget() {
     <div className="app">
       <div className="container">
         <h2 className="center">Holiday Budget Calculator</h2>
+
+        {/* Festival Dropdown */}
+        <label>Select Festival:</label>
+        <select id="festivalDropdown">
+            <option value="">festival</option>
+            {festivals.map((festival) => (
+                <option key={festival._id.$oid} value={festival._id.$oid}>
+                    {`${festival.Name}`}
+                </option>
+            ))}
+        </select>
 
         {/* Currency Dropdown */}
         <div>
