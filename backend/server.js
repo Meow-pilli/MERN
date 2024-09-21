@@ -46,7 +46,8 @@ app.post('/calcBudget', (req, res) => {
       indoorDecorations,
       outdoorDecorations,
       lights,
-      currency
+      currency,
+      holidayBudget
     } = req.body;
 
     // Calculating Gifts
@@ -72,13 +73,17 @@ app.post('/calcBudget', (req, res) => {
     const decorationsTotal = Number(indoorDecorations) + 
     Number(outdoorDecorations) + Number(lights);
 
+    // Calculating total actual budget
     const totalBudget = giftsTotal + travelTotal + foodAndDrinksTotal + 
     entertainmentTotal + stationaryTotal + decorationsTotal;
 
+    // Calculate difference between holiday budget and actual budget
+    const budgetDifference = holidayBudget - totalBudget;
+
     // Logic for message
-  const message = totalBudget < 500 
-  ? `You are under Budget of 500 ${currency}`
-  : `You are over Budget of 500 ${currency}`;
+  const message = budgetDifference > 0 
+  ? `You are within your budget! You saved ${budgetDifference} ${currency}`
+  : `You overspent by ${Math.abs(budgetDifference)} ${currency}`;
 
     res.json({
         totalBudget,

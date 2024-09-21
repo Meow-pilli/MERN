@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
+import Axios from "axios";
 
 function Budget() {
   // State for input fields
@@ -34,7 +35,7 @@ function Budget() {
   // State variables for holiday budget and calculations
   const [holidayBudget, setHolidayBudget] = useState(0);  // User-input holiday budget
   const [actualBudget, setActualBudget] = useState(0);    // Calculated actual budget
-  const [difference, setDifference] = useState(0);        // Difference between holiday and actual budget
+  //const [budgetDifference, setbudgetDifference] = useState(0);        // Difference between holiday and actual budget
   const [message, setMessage] = useState('');             // Message based on overspending or underspending
   
   const [currency, setCurrency] = useState('USD');        // Currency state
@@ -68,49 +69,42 @@ function Budget() {
       });
   }, []);
 
-  let calcBudget = (event) => {
+  const calcBudget = async (event) => {
     event.preventDefault();
 
-    // Calculating Gifts
-    let giftsTotal = (Number(numFamilyMembers) * Number(budgetPerFamilyMember)) +
-                    (Number(numFriends) * Number(budgetPerFriend));
+    try {
+      const response = await Axios.post('http://localhost:5555/calcBudget', {
+        numFamilyMembers,
+        budgetPerFamilyMember,
+        numFriends,
+        budgetPerFriend,
+        numTravelers,
+        travelCostPerPerson,
+        transportation,
+        accommodation,
+        numMeals,
+        costPerMeal,
+        food,
+        drinks,
+        snacks,
+        partiesAndEvents,
+        iceSkating,
+        concerts,
+        christmasMarkets,
+        wrappingPaper,
+        cards,
+        indoorDecorations,
+        outdoorDecorations,
+        lights,
+        currency,
+        holidayBudget
+      });
 
-    // Calculating Travel
-    let travelTotal = (Number(numTravelers) * Number(travelCostPerPerson)) +
-                      Number(transportation) + Number(accommodation);
-
-    // Calculating Food and Drinks
-    let foodAndDrinksTotal = (Number(numMeals) * Number(costPerMeal)) +
-                             Number(food) + Number(drinks) + Number(snacks);
-
-    // Calculating Entertainment
-    let entertainmentTotal = Number(partiesAndEvents) + 
-                             Number(iceSkating) + Number(concerts) + 
-                             Number(christmasMarkets);
-
-    // Calculating Stationary
-    let stationaryTotal = Number(wrappingPaper) + Number(cards);
-
-    // Calculating Decorations
-    let decorationsTotal = Number(indoorDecorations) + 
-                           Number(outdoorDecorations) + Number(lights);
-
-    // Calculating total actual budget
-    let totalBudget = giftsTotal + travelTotal + foodAndDrinksTotal + 
-                      entertainmentTotal + stationaryTotal + decorationsTotal;
-
-    // Set the actual budget
-    setActualBudget(totalBudget);
-
-    // Calculate difference between holiday budget and actual budget
-    let budgetDifference = holidayBudget - totalBudget;
-    setDifference(budgetDifference);
-
-    // Determine the message
-    if (budgetDifference >= 0) {
-      setMessage(`You are within your budget! You saved ${budgetDifference} ${currency}`);
-    } else {
-      setMessage(`You overspent by ${Math.abs(budgetDifference)} ${currency}`);
+      setActualBudget(response.data.totalBudget);
+      setMessage(response.data.message);
+    } catch (error) {
+      console.error('Error calculating budget', error);
+      setMessage('Error calculating budget');
     }
   };
 
@@ -230,7 +224,6 @@ function Budget() {
         <div className="result">
           <h2>Results</h2>
           <p>Actual Budget: {actualBudget} {currency}</p>
-          <p>Difference: {difference} {currency}</p>
           <p>{message}</p>
           <button onClick={reload}>Reload</button>
         </div>
