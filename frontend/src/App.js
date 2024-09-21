@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
-import Axios from "axios";
 
 function Budget() {
-  // state
+  // State for input fields
   const [numFamilyMembers, setNumFamilyMembers] = useState(0);
   const [budgetPerFamilyMember, setBudgetPerFamilyMember] = useState(0);
   const [numFriends, setNumFriends] = useState(0);
@@ -32,20 +31,46 @@ function Budget() {
   const [outdoorDecorations, setOutdoorDecorations] = useState(0);
   const [lights, setLights] = useState(0);
 
-  const [currency, setCurrency] = useState('USD');
-  const [budget, setBudget] = useState('');
-  const [message, setMessage] = useState('');
+  // State variables for holiday budget and calculations
+  const [holidayBudget, setHolidayBudget] = useState(0);  // User-input holiday budget
+  const [actualBudget, setActualBudget] = useState(0);    // Calculated actual budget
+  const [difference, setDifference] = useState(0);        // Difference between holiday and actual budget
+  const [message, setMessage] = useState('');             // Message based on overspending or underspending
+  
+  const [currency, setCurrency] = useState('USD');        // Currency state
+  const [currencies, setCurrencies] = useState([]);       // Currencies array from JSON
+  const [loading, setLoading] = useState(true);           // Loading state
+  const [error, setError] = useState(null);               // Error state
 
-  // Top 40 currencies list
-  const currencies = [
-    "USD", "EUR", "JPY", "GBP", "AUD", "CAD", "CHF", "CNY", "SEK", "NZD",
-    "MXN", "SGD", "HKD", "NOK", "KRW", "TRY", "INR", "RUB", "BRL", "ZAR",
-    "DKK", "PLN", "TWD", "THB", "MYR", "IDR", "CZK", "HUF", "ILS", "CLP",
-    "PHP", "AED", "COP", "SAR", "PEN", "VND", "PKR", "EGP", "BDT", "KWD", "QAR"
-  ];
+  useEffect(() => {
+    // Fetch the currency data from the JSON file
+    fetch("/data/Common-Currency.json")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Fetched currency data:", data); // Log fetched data
+  
+        // Convert the object into an array of currency objects
+        const currencyArray = Object.keys(data).map((key) => ({
+          code: key,
+          ...data[key]
+        }));
+        setCurrencies(currencyArray); // Set the array of currencies in state
+        setLoading(false); // Set loading to false after data is loaded
+      })
+      .catch((error) => {
+        console.error("Error fetching currencies:", error);
+        setError("Failed to load currencies");
+        setLoading(false); // Ensure loading is false even if there's an error
+      });
+  }, []);
+  
 
   let calcBudget = (event) => {
-    // prevent submitting
     event.preventDefault();
 
     // Calculating Gifts
@@ -72,16 +97,22 @@ function Budget() {
     let decorationsTotal = Number(indoorDecorations) + 
                            Number(outdoorDecorations) + Number(lights);
 
+    // Calculating total actual budget
     let totalBudget = giftsTotal + travelTotal + foodAndDrinksTotal + 
                       entertainmentTotal + stationaryTotal + decorationsTotal;
-    
-    setBudget(totalBudget);
 
-    // Logic for message
-    if (totalBudget < 500) {
-      setMessage(`You are under Budget of 500 ${currency}`);
+    // Set the actual budget
+    setActualBudget(totalBudget);
+
+    // Calculate difference between holiday budget and actual budget
+    let budgetDifference = holidayBudget - totalBudget;
+    setDifference(budgetDifference);
+
+    // Determine the message
+    if (budgetDifference >= 0) {
+      setMessage(`You are within your budget! You saved ${budgetDifference} ${currency}`);
     } else {
-      setMessage(`You are over Budget of 500 ${currency}`);
+      setMessage(`You overspent by ${Math.abs(budgetDifference)} ${currency}`);
     }
   };
 
@@ -92,16 +123,28 @@ function Budget() {
   return (
     <div className="app">
       <div className="container">
-        <h2 className="center">Budget Calculator</h2>
+        <h2 className="center">Holiday Budget Calculator</h2>
 
         {/* Currency Dropdown */}
         <div>
           <label>Select Currency</label>
           <select value={currency} onChange={(e) => setCurrency(e.target.value)}>
-            {currencies.map((curr) => (
-              <option key={curr} value={curr}>{curr}</option>
-            ))}
+            {loading ? (
+              <option>Loading...</option>
+            ) : error ? (
+              <option>{error}</option>
+            ) : (
+              currencies.map((curr) => (
+                <option key={curr.code} value={curr.code}>{curr.name} ({curr.symbol})</option>
+              ))
+            )}
           </select>
+        </div>
+
+        {/* Holiday Budget Input */}
+        <div>
+          <label>Enter your Holiday Budget</label>
+          <input type="number" value={holidayBudget} onChange={(e) => setHolidayBudget(Number(e.target.value))} />
         </div>
 
         <form onSubmit={calcBudget}>
@@ -140,7 +183,6 @@ function Budget() {
             <input type="number" value={numMeals} onChange={(e) => setNumMeals(e.target.value)} />
             <label>Cost per Meal</label>
             <input type="number" value={costPerMeal} onChange={(e) => setCostPerMeal(e.target.value)} />
-            
             <label>Food</label>
             <input type="number" value={food} onChange={(e) => setFood(e.target.value)} />
             <label>Drinks</label>
@@ -154,7 +196,6 @@ function Budget() {
             <h3>Entertainment</h3>
             <label>Parties and Events</label>
             <input type="number" value={partiesAndEvents} onChange={(e) => setPartiesAndEvents(e.target.value)} />
-            
             <label>Ice Skating</label>
             <input type="number" value={iceSkating} onChange={(e) => setIceSkating(e.target.value)} />
             <label>Concerts/Pageants</label>
@@ -177,24 +218,23 @@ function Budget() {
             <h3>Decorations</h3>
             <label>Indoor Decorations</label>
             <input type="number" value={indoorDecorations} onChange={(e) => setIndoorDecorations(e.target.value)} />
-            
             <label>Outdoor Decorations</label>
             <input type="number" value={outdoorDecorations} onChange={(e) => setOutdoorDecorations(e.target.value)} />
             <label>Lights</label>
             <input type="number" value={lights} onChange={(e) => setLights(e.target.value)} />
           </div>
 
-          <div className="center">
-            <button type="submit" className="btn">Calculate</button>
-            <button type="button" className="btn" onClick={reload}>Reload</button>
-          </div>
-
+          {/* Submit Button */}
+          <button type="submit">Calculate Budget</button>
         </form>
 
-        {/* Budget Display */}
-        <div>
-          <h2>Total Budget: {budget} {currency}</h2>
-          <h3>{message}</h3>
+        {/* Display Results */}
+        <div className="result">
+          <h2>Results</h2>
+          <p>Actual Budget: {actualBudget} {currency}</p>
+          <p>Difference: {difference} {currency}</p>
+          <p>{message}</p>
+          <button onClick={reload}>Reload</button>
         </div>
       </div>
     </div>
