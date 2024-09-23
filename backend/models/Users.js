@@ -14,6 +14,18 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  UserFestivals: [
+    {
+      Ufestival: {
+        type: String,
+        required: true,
+      },
+      Ubudget: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
 });
 
 const UserModel = mongoose.model("users", UserSchema);
