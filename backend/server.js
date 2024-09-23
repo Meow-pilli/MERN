@@ -23,10 +23,10 @@ app.get('/', (req, res) => {
 })
 
 app.get("/getCurrency", (req, res) => {
-  CurrencyModel.find({}).then(function(Currency) {
-      res.json(Currency)
+  CurrencyModel.find({}).then(function(Currency) {  // Find all the currencies in the CurrencyModel
+    res.json(Currency) // Return the currencies as a JSON response
   }).catch(function(err){
-      console.log(err)
+    console.log(err)   // Log any errors to the console
   })
 });
 
@@ -106,7 +106,24 @@ app.post('/calcBudget', (req, res) => {
         message
     });
 });
-  
+
+app.post("/saveFestivalBudget", (req, res) => {
+  const { Ufestival, Ubudget, username } = req.body;
+
+  UserModel.findOneAndUpdate(
+    { username },
+    { $set: { "activeFestival.Ufestival": Ufestival, "activeFestival.Ubudget": Ubudget } },  // Use atomic operator to set fields
+    { new: true }
+  )
+    .then((user) => {
+      res.json({ message: "Festival budget saved successfully", user });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ message: "Error saving festival budget" });
+    });
+});
+
 //listen for requests
 app.listen(process.env.PORT, () => {
     console.log('listening on port', process.env.PORT)

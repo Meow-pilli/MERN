@@ -14,13 +14,13 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  UserFestivals: [
+  activeFestival: [
     {
-      Ufestival: {
+      Ufestival: {   //user saved festivals
         type: String,
         required: true,
       },
-      Ubudget: {
+      Ubudget: {  //user saved budget
         type: Number,
         required: true,
       },
