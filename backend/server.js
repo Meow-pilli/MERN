@@ -8,6 +8,8 @@ const UserModel = require("./models/Users")
 const CurrencyModel = require("./models/Currency")
 const cors = require('cors')
 //const workoutRoutes = require('./routes/workouts')
+const router = require('./routes/auth');
+const { auth } = require('express-openid-connect');
 
 //express app
 const app = express()
@@ -123,6 +125,26 @@ app.post("/saveFestivalBudget", (req, res) => {
       res.status(500).json({ message: "Error saving festival budget" });
     });
 });
+
+const config = {
+  authRequired: false,
+  auth0Logout: true
+};
+
+const port = process.env.PORT;
+if (!config.baseURL && !process.env.BASE_URL && process.env.PORT && process.env.NODE_ENV !== 'production') {
+  config.baseURL = `http://localhost:${port}/auth`;
+}
+
+app.use(auth(config));
+
+// Middleware to make the `user` object available for all views
+app.use(function (req, res, next) {
+  res.locals.user = req.oidc.user;
+  next();
+});
+
+app.use('/', router);
 
 //listen for requests
 app.listen(process.env.PORT, () => {
