@@ -108,12 +108,12 @@ app.post('/calcBudget', (req, res) => {
 });
 
 app.post("/saveFestivalBudget", (req, res) => {
-  const { Ufestival, Ubudget, username } = req.body;
+  const { activeFestivals, username } = req.body;
 
   UserModel.findOneAndUpdate(
     { username },
-    { $set: { "activeFestival.Ufestival": Ufestival, "activeFestival.Ubudget": Ubudget } },  // Use atomic operator to set fields
-    { new: true }
+    { $set: { activeFestivals: { $each: activeFestivals } } },  // Use atomic operator to set fields
+    //{ new: true }
   )
     .then((user) => {
       res.json({ message: "Festival budget saved successfully", user });

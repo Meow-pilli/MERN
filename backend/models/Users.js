@@ -1,5 +1,16 @@
 const mongoose = require("mongoose");
 
+const activeFestivalSchema = new mongoose.Schema({
+  Ufestival: {
+    type: String,
+    required: true,
+  },
+  Ubudget: {
+    type: Number,
+    required: true,
+  }
+});
+
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -14,18 +25,10 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  activeFestival: [
-    {
-      Ufestival: {   //user saved festivals
-        type: String,
-        required: true,
-      },
-      Ubudget: {  //user saved budget
-        type: Number,
-        required: true,
-      },
-    },
-  ],
+  activeFestival: {
+    type: [activeFestivalSchema],
+    required: true,
+  }
 });
 
 const UserModel = mongoose.model("users", UserSchema);
