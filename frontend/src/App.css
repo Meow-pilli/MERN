@@ -36,3 +36,172 @@
     transform: rotate(360deg);
   }
 }
+
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #e5f4f9;
+  color: #333;
+}
+
+.app {
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.container {
+  padding: 20px;
+  text-align: center;
+}
+
+h2 {
+  color: #004d66;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  text-align: left;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+input[type="number"], select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+button {
+  background-color: #004d66;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+}
+
+button:hover {
+  background-color: #00394d;
+}
+
+.result {
+  margin-top: 20px;
+}
+
+h3 {
+  color: #004d66;
+  background-color: #e5f4f9;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 18px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.result p {
+  font-size: 16px;
+}
+
+.center {
+  text-align: center;
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #004d66;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+}
+
+input[type="number"] {
+  border: 2px solid #ccc;
+}
+
+input[type="number"]:focus, select:focus {
+  border-color: #004d66;
+  outline: none;
+}
+
+.result button {
+  background-color: #ff6666;
+}
+
+.result button:hover {
+  background-color: #ff3333;
+}
+
+/* Category Button Styling */
+.category {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: white;
+}
+
+.category .icon {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.gifts {
+  background-color: #cbb045;
+}
+
+.travel {
+  background-color: #4093d4;
+}
+
+.food {
+  background-color: #e04a4a;
+}
+
+.entertainment {
+  background-color: #6baf75;
+}
+
+.decorations {
+  background-color: #946835;
+}
+
+.clothing {
+  background-color: #4083c4;
+}
+
+.stationary {
+  background-color: #e07a4a;
+}
+
+.charity {
+  background-color: #a35faa;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logo-image {
+  width: 200px; /* Adjust size as needed */
+  height: auto;
+}
