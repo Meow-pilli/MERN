@@ -1,0 +1,7 @@
+{
+  "parser": "babel",
+  "printWidth": 140,
+  "tabWidth": 2,
+  "semi": true,
+  "bracketSpacing": true
+}

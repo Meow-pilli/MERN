@@ -45,16 +45,25 @@ body {
 }
 
 .app {
-  max-width: 400px;
-  margin: 0 auto;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  height: 100vh; /* Full height */
+  width: 100vw; /* Full width */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e5f4f9;
+  overflow-y: auto;
 }
 
 .container {
+  width: 90%;
+  max-width: 1200px; /* Adjust this as needed */
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   text-align: center;
+  max-height: 100vh;
+  overflow-y: auto; /* Handle scrolling if content is too long */
 }
 
 h2 {
@@ -128,7 +137,14 @@ select {
 }
 
 input[type="number"] {
-  border: 2px solid #ccc;
+  width: 100%; /* Ensures responsiveness */
+  max-width: 1000px; /* Limits the width to prevent merging */
+  padding: 8px; /* Adjust padding to fit */
+  margin-right: 10px; /* Adds spacing between inputs */
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  box-sizing: border-box; /* Ensures padding doesn’t increase width */
 }
 
 input[type="number"]:focus, select:focus {
@@ -198,10 +214,94 @@ input[type="number"]:focus, select:focus {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
 }
 
 .logo-image {
-  width: 200px; /* Adjust size as needed */
+  width: 100%; /* Make it take full width */
+  max-width: 200px; /* Limit its maximum width */
   height: auto;
+  object-fit: cover;
+  object-position: center center;
 }
+
+
+/* Travel Dropdown Styles */
+.category {
+  display: flex;
+  align-items: center; /* Vertically centers text and icon */
+  justify-content: space-between;
+  padding: 15px;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: white;
+  cursor: pointer;
+  gap: 10px; /* Adds spacing between icon and text */
+}
+
+.travel {
+  background-color: #4093d4;
+}
+
+.icon {
+  font-size: 24px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px; /* Adds some spacing around the icon */
+}
+
+
+
+span {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  /* margin:0 auto; */
+}
+
+/* Grid layout for all sections */
+.travel-grid, .gifts-grid, .food-grid, .entertainment-grid, .stationary-grid, .decorations-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 15px;
+}
+
+.options-box {
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 10px;
+  color: white;
+  margin-bottom: 20px;
+}
+
+/* Background color for each options box */
+.gifts-options-box {
+  background-color: #cbb045;
+}
+
+.travel-options-box {
+  background-color: #4093d4;
+}
+
+.food-options-box {
+  background-color: #e04a4a;
+}
+
+.entertainment-options-box {
+  background-color: #6baf75;
+}
+
+.stationary-options-box {
+  background-color: #e07a4a;
+}
+
+.decorations-options-box {
+  background-color: #946835;
+}
+
