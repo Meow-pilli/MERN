@@ -305,3 +305,37 @@ span {
   background-color: #946835;
 }
 
+.result {
+  /* background-color: #66b3ff; Light blue */
+  padding: 20px;
+  text-align: center;
+  color: black;
+}
+
+/* Budget Terminology */
+.result p {
+  font-size: 18px;
+  margin: 5px 0;
+}
+
+.top-right-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.top-right-buttons button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.top-right-buttons button:hover {
+  background-color: #0056b3;
+}
+
+
