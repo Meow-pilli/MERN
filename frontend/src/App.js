@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
 import useSWR from "swr";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const service = {
   base_url: process.env.REACT_APP_BASE_URL ?? "http://localhost:5555",
@@ -11,9 +15,35 @@ const Axios = axios.create({
   baseURL: service.base_url,
 });
 
-// const axiosConfig = {
-//   baseURL: service.base_url,
-// };
+// Pie Chart Component
+const BudgetPieChart = ({ spent, remaining }) => {
+  if (!spent || !remaining) {
+    return <div>Loading...</div>;
+  }
+  const data = {
+    labels: ["Budget Spent", "Budget Remaining"],
+    datasets: [
+      {
+        data: [spent, remaining],
+        backgroundColor: ["#ff6666", "#66b3ff"],
+        //hoverBackgroundColor: ["#ff3333", "#3399ff"],
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+    },
+  };
+
+  return <Pie data={data} options={options} />;
+};
+
+
 
 /**
  * @typedef {{name,price}}} Gift
@@ -83,6 +113,25 @@ const toggleFoodOptions = () => setShowFoodOptions(!showFoodOptions);
 const toggleEntertainmentOptions = () => setShowEntertainmentOptions(!showEntertainmentOptions);
 const toggleStationaryOptions = () => setShowStationaryOptions(!showStationaryOptions);
 const toggleDecorationsOptions = () => setShowDecorationsOptions(!showDecorationsOptions);
+
+// Expand All and Collapse All functions
+const expandAll = () => {
+  setShowTravelOptions(true);
+  setShowGiftsOptions(true);
+  setShowFoodOptions(true);
+  setShowEntertainmentOptions(true);
+  setShowStationaryOptions(true);
+  setShowDecorationsOptions(true);
+};
+
+const collapseAll = () => {
+  setShowTravelOptions(false);
+  setShowGiftsOptions(false);
+  setShowFoodOptions(false);
+  setShowEntertainmentOptions(false);
+  setShowStationaryOptions(false);
+  setShowDecorationsOptions(false);
+};
 
 const [selectedFestival, setSelectedFestival] = useState(""); // State for the selected festival
 
@@ -171,6 +220,12 @@ const [selectedFestival, setSelectedFestival] = useState(""); // State for the s
         <div>
           <label>Enter your Holiday Budget</label>
           <input type="number" value={holidayBudget} onChange={(e) => setHolidayBudget(Number(e.target.value))} />
+        </div>
+
+        {/* Top right section for Expand All and Collapse All */}
+        <div className="top-right-buttons">
+          <button onClick={expandAll}>Expand All</button>
+          <button onClick={collapseAll}>Collapse All</button>
         </div>
 
         <form onSubmit={calcBudget}>
@@ -346,13 +401,14 @@ const [selectedFestival, setSelectedFestival] = useState(""); // State for the s
           <button type="submit">Calculate Budget</button>
         </form>
 
-        {/* Display Results */}
+        {/* Footer Section with Budget Details and Pie Chart */}
         <div className="result">
-          <h2>Results</h2>
-          <p>
-            Actual Budget: {actualBudget} {currency}
-          </p> 
+          <h2>Budget Summary</h2>
+          <p>Holiday Budget: {holidayBudget}</p>
+          <p>Actual Spent: {actualBudget}</p>
+          <p>Difference: {holidayBudget - actualBudget}</p>
           <p>{message}</p>
+          {/* <BudgetPieChart spent={actualBudget} remaining={holidayBudget - actualBudget} /> */}
           <button onClick={reload}>Reload</button>
         </div>
       </div>
